@@ -1,0 +1,25 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="apis.models.FixingCommit.DoesNotExist" />
+          <option value="apis.models.FixingCommit.objects" />
+          <option value="apis.models.FixingFile.DoesNotExist" />
+          <option value="github.Label" />
+          <option value="apis.models.FixingFile.objects" />
+          <option value="tests.test_cli.CLITestCase.ansible_workdir" />
+          <option value="tests.test_cli.CLITestCase.tosca_workdir" />
+          <option value="tests.test_ansible_miner.RepositoryMinerTestCase.git_repo" />
+          <option value="tests.test_ansible_miner.RepositoryMinerTestCase.path_to_tmp_repos" />
+          <option value="apis.models.Task.objects" />
+          <option value="apis.models.Repositories.objects" />
+          <option value="apis.models.Metrics.objects" />
+          <option value="apis.models.DefectPredictionModel.objects" />
+          <option value="apis.models.FailureProneFile.objects" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
