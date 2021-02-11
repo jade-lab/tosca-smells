@@ -1,0 +1,14 @@
+url,smelly
+https://raw.githubusercontent.com/opentelekomcloud-blueprints/tosca-tutorials/master/examples/python/scripts/create.py,false
+https://raw.githubusercontent.com/opentelekomcloud-blueprints/tosca-tutorials/master/examples/python/scripts/goodbye.py,false
+https://raw.githubusercontent.com/opentelekomcloud-blueprints/tosca-tutorials/master/examples/python/scripts/start.py,false
+https://raw.githubusercontent.com/lexis-project/application-templates/master/examples/components/pi/scripts/compute_pi.py,false
+https://raw.githubusercontent.com/laurentganne/tosca-samples/master/python3/scripts/start.py,false
+https://raw.githubusercontent.com/laurentganne/tosca-samples/master/python3/scripts/create.py,false
+https://raw.githubusercontent.com/ystia/yorc-a4c-plugin/develop/tosca-samples/org/ystia/yorc/samples/python/scripts/start.py,false
+https://raw.githubusercontent.com/ystia/yorc-a4c-plugin/develop/tosca-samples/org/ystia/yorc/samples/python/scripts/create.py,false
+https://raw.githubusercontent.com/opentelekomcloud-blueprints/tosca-tutorials/master/examples/python/scripts/hello.py,false
+https://raw.githubusercontent.com/ystia/yorc-a4c-plugin/develop/tosca-samples/org/ystia/yorc/samples/python/scripts/goodbye.py,false
+https://raw.githubusercontent.com/ystia/yorc-a4c-plugin/develop/tosca-samples/org/ystia/yorc/samples/python/scripts/hello.py,false
+https://raw.githubusercontent.com/laurentganne/tosca-samples/master/python3/scripts/goodbye.py,false
+https://raw.githubusercontent.com/laurentganne/tosca-samples/master/python3/scripts/hello.py,false

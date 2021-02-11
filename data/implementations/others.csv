@@ -1,0 +1,6 @@
+url,smelly
+https://raw.githubusercontent.com/alien4cloud/samples/master/nginx/scripts/install_nginx.bat,false
+https://raw.githubusercontent.com/alien4cloud/samples/master/helloWindows/scripts/install.bat,false
+https://raw.githubusercontent.com/adispataru/aspide-tosca-dsl/master/aspide-normative/scripts/main.dcx,false
+https://raw.githubusercontent.com/alien4cloud/samples/master/nginx/scripts/start_nginx.bat,false
+https://raw.githubusercontent.com/alien4cloud/samples/master/helloWindows/scripts/start.bat,false

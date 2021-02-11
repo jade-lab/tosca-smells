@@ -2,7 +2,7 @@
    For example, NodeType, RelationshipType, Interfaces, and so forth.
 """
 
-
+import os
 import json
 import pandas as pd
 import requests
@@ -161,5 +161,5 @@ for url_to_raw in blueprints_df.url_to_remote_raw.to_list():
     })
 
 
-with open('artifacts.json', 'w') as f:
+with open(os.path.join('data', 'artifacts.json'), 'w') as f:
     json.dump(artifacts, f)
