@@ -35,6 +35,8 @@ with open(os.path.join('data', 'artifacts.json')) as f:
                 nodes = nodes.append({'node': str(node), 'smelly': 'false'}, ignore_index=True)
             elif smelly == 'u':
                 nodes = nodes.append({'node': str(node), 'smelly': 'unknown'}, ignore_index=True)
+            elif smelly == 'l':
+                nodes = nodes.append({'node': str(node), 'smelly': 'lazy'}, ignore_index=True)
             else:
                 nodes = nodes.append({'node': str(node), 'smelly': 'true'}, ignore_index=True)
             
