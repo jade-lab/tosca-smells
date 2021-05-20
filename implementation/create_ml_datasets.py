@@ -4,6 +4,9 @@ import yaml
 
 from toscametrics.metrics_extractor import extract_all
 from toscametrics.general.lines_code import LinesCode
+from toscametrics.blueprint.num_interfaces import NumInterfaces
+from toscametrics.blueprint.num_properties import NumProperties
+
 
 
 def large_class_2_metrics():
@@ -17,12 +20,14 @@ def large_class_2_metrics():
             continue
 
         try:
-            metrics = extract_all(plain_yml)
+            # Decor defines Large class as a class with very high NMD + NAD, where NMD is the number of methods and NAD
+            # is the number of attributes. In TOSCA we map the former to number of interfaces and the latter to the
+            # number of properties
+            df.loc[idx, 'num_interfaces'] = NumInterfaces(plain_yml).count()
+            df.loc[idx, 'num_properties'] = NumProperties(plain_yml).count()
+
         except AttributeError:
             continue
-
-        for key, value in metrics.items():
-            df.loc[idx, key] = value
 
     # Remove columns containing only zeros
     df = df.loc[:, (df != 0).any(axis=0)]
@@ -40,12 +45,11 @@ def lazy_class_2_metrics():
             continue
 
         try:
-            metrics = extract_all(plain_yml)
+            # In the paper we define the Lazy Class smell as the inverse of the Large Class smell
+            df.loc[idx, 'num_interfaces'] = NumInterfaces(plain_yml).count()
+            df.loc[idx, 'num_properties'] = NumProperties(plain_yml).count()
         except AttributeError:
             continue
-
-        for key, value in metrics.items():
-            df.loc[idx, key] = value
 
     # Remove columns containing only zeros
     df = df.loc[:, (df != 0).any(axis=0)]
