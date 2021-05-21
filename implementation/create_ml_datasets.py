@@ -2,15 +2,13 @@ import pandas as pd
 import requests
 import yaml
 
-from toscametrics.metrics_extractor import extract_all
 from toscametrics.general.lines_code import LinesCode
 from toscametrics.blueprint.num_interfaces import NumInterfaces
 from toscametrics.blueprint.num_properties import NumProperties
 
 
-
 def large_class_2_metrics():
-    df = pd.read_csv('validation/large_class.csv')
+    df = pd.read_csv('implementation/large_class.csv')
 
     for idx, row in df.iterrows():
 
@@ -31,11 +29,11 @@ def large_class_2_metrics():
 
     # Remove columns containing only zeros
     df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/large_class.csv', index=False)
+    df.to_csv('implementation/large_class_metrics.csv', index=False)
 
 
 def lazy_class_2_metrics():
-    df = pd.read_csv('validation/lazy_class.csv')
+    df = pd.read_csv('implementation/lazy_class.csv')
 
     for idx, row in df.iterrows():
 
@@ -53,11 +51,11 @@ def lazy_class_2_metrics():
 
     # Remove columns containing only zeros
     df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/lazy_class.csv', index=False)
+    df.to_csv('implementation/lazy_class_metrics.csv', index=False)
 
 
 def long_method_2_metrics():
-    df = pd.read_csv('validation/long_method.csv')
+    df = pd.read_csv('implementation/long_method.csv')
 
     for idx, row in df.iterrows():
         response = requests.get(row.url)
@@ -71,14 +69,14 @@ def long_method_2_metrics():
 
     # Remove columns containing only zeros
     df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/long_method.csv', index=False)
+    df.to_csv('implementation/long_method_metrics.csv', index=False)
 
 
-print('Creating dataset: large_class.csv')
+print('Creating dataset: large_class_metrics.csv')
 large_class_2_metrics()
 
-print('Creating dataset: lazy_class.csv')
+print('Creating dataset: lazy_class_metrics.csv')
 lazy_class_2_metrics()
 
-print('Creating dataset: long_method.csv')
+print('Creating dataset: long_method_metrics.csv')
 long_method_2_metrics()
