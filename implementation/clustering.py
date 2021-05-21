@@ -14,14 +14,14 @@ def smell_clustering(path: str, feature_columns: list, smell: str):
     )
     print("Train before scaling:", blueprints_df.describe())
 
+    # Delete NaN rows
+    blueprints_df = blueprints_df.dropna(subset=feature_columns)
+
     # Scale/normalize?
     scaler = MinMaxScaler()
     blueprints_df[feature_columns] = scaler.fit_transform(
         blueprints_df[feature_columns]
     )
-
-    # Delete nan rows?
-    # TODO if necessary
 
     # Sum for label determination
     blueprints_df["metrics_sum"] = blueprints_df.loc[:, feature_columns].sum(axis=1)
@@ -53,7 +53,7 @@ def smell_clustering(path: str, feature_columns: list, smell: str):
         blueprints_df, feature_columns, "kmeans_labels", smell
     )
 
-    blueprints_df.to_csv(f"data/{smell}_clustered.csv", index=False)
+    blueprints_df.to_csv(f"{smell}_clustered.csv", index=False)
 
 
 def label_determination(blueprints_df, feature_columns, label_column, smell):
@@ -96,19 +96,35 @@ def label_determination(blueprints_df, feature_columns, label_column, smell):
     return blueprints_df
 
 
-large_lazy_class_feature_columns = ["num_properties", "num_interfaces"]
-long_method_feature_columns = ["loc"]
+large_lazy_class_feature_columns = [
+    "lines_code",
+    "lines_blank",
+    "lines_comment",
+    "num_keys",
+    "num_suspicious_comments",
+    "num_tokens",
+    "text_entropy",
+    "num_imports",
+    "num_inputs",
+    "num_interfaces",
+    "num_node_templates",
+    "num_node_types",
+    "num_parameters",
+    "num_properties",
+    "num_relationship_templates",
+    "num_relationship_types",
+    "num_shell_scripts",
+]
+long_method_feature_columns = ["lines_code"]
 
 smell_clustering(
-    "data/large_and_lazy_class_metrics.csv",
+    "large_class.csv",
     large_lazy_class_feature_columns,
     "large_class",
 )
 smell_clustering(
-    "data/large_and_lazy_class_metrics.csv",
+    "lazy_class.csv",
     large_lazy_class_feature_columns,
     "lazy_class",
 )
-smell_clustering(
-    "data/long_method_metrics.csv", long_method_feature_columns, "long_method"
-)
+smell_clustering("long_method.csv", long_method_feature_columns, "long_method")
