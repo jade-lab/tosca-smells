@@ -1,59 +1,113 @@
+import os
 import pandas as pd
 import requests
 import yaml
 
-from toscametrics.metrics_extractor import extract_all
 from toscametrics.general.lines_code import LinesCode
+from toscametrics.general.num_tokens import NumTokens
+from toscametrics.general.text_entropy import TextEntropy
+from toscametrics.blueprint.num_interfaces import NumInterfaces
+from toscametrics.blueprint.num_properties import NumProperties
 
 
 def large_class_2_metrics():
-    df = pd.read_csv('validation/large_class.csv')
+    df = pd.read_csv(os.path.join('implementation', 'datasets', 'large_class.csv'))
 
     for idx, row in df.iterrows():
+        plain_yml = ''
 
         try:
             plain_yml = yaml.safe_dump(yaml.safe_load(row.type))
         except yaml.YAMLError:
-            continue
+            pass
+
+        # Decor defines Large class as a class with very high NMD + NAD, where NMD is the number of methods and NAD
+        # is the number of attributes. In TOSCA we map the former to number of interfaces and the latter to the
+        # number of properties
+        try:
+            # In the paper we define the Lazy Class smell as the inverse of the Large Class smell
+            lines_code = int(LinesCode(plain_yml).count())
+        except (AttributeError, TypeError):
+            lines_code = 0
 
         try:
-            metrics = extract_all(plain_yml)
-        except AttributeError:
-            continue
+            num_interfaces = int(NumInterfaces(plain_yml).count())
+        except (AttributeError, TypeError):
+            num_interfaces = 0
 
-        for key, value in metrics.items():
-            df.loc[idx, key] = value
+        try:
+            num_properties = int(NumProperties(plain_yml).count())
+        except (AttributeError, TypeError):
+            num_properties = 0
 
-    # Remove columns containing only zeros
-    df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/large_class.csv', index=False)
+        try:
+            num_tokens = NumTokens(plain_yml).count()
+        except (AttributeError, TypeError):
+            num_tokens = 0
+
+        try:
+            entropy = TextEntropy(plain_yml).count()
+        except (AttributeError, TypeError):
+            entropy = 0
+
+        df.loc[idx, 'lines_code'] = lines_code
+        df.loc[idx, 'num_interfaces'] = num_interfaces
+        df.loc[idx, 'num_properties'] = num_properties
+        df.loc[idx, 'num_tokens'] = num_tokens
+        df.loc[idx, 'entropy'] = entropy
+
+    return df.drop(['type'], axis=1)
 
 
 def lazy_class_2_metrics():
-    df = pd.read_csv('validation/lazy_class.csv')
+    df = pd.read_csv(os.path.join('implementation', 'datasets', 'lazy_class.csv'))
 
     for idx, row in df.iterrows():
+
+        plain_yml = ''
 
         try:
             plain_yml = yaml.safe_dump(yaml.safe_load(row.type))
         except yaml.YAMLError:
-            continue
+            pass
+
+        # In the paper we define the Lazy Class smell as the inverse of the Large Class smell
+        try:
+            lines_code = int(LinesCode(plain_yml).count())
+        except (AttributeError, TypeError):
+            lines_code = 0
 
         try:
-            metrics = extract_all(plain_yml)
-        except AttributeError:
-            continue
+            num_interfaces = int(NumInterfaces(plain_yml).count())
+        except (AttributeError, TypeError):
+            num_interfaces = 0
 
-        for key, value in metrics.items():
-            df.loc[idx, key] = value
+        try:
+            num_tokens = NumTokens(plain_yml).count()
+        except (AttributeError, TypeError):
+            num_tokens = 0
 
-    # Remove columns containing only zeros
-    df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/lazy_class.csv', index=False)
+        try:
+            num_properties = int(NumProperties(plain_yml).count())
+        except (AttributeError, TypeError):
+            num_properties = 0
+
+        try:
+            entropy = TextEntropy(plain_yml).count()
+        except (AttributeError, TypeError):
+            entropy = 0
+
+        df.loc[idx, 'lines_code'] = lines_code
+        df.loc[idx, 'num_interfaces'] = num_interfaces
+        df.loc[idx, 'num_properties'] = num_properties
+        df.loc[idx, 'num_tokens'] = num_tokens
+        df.loc[idx, 'entropy'] = entropy
+
+    return df.drop(['type'], axis=1)
 
 
 def long_method_2_metrics():
-    df = pd.read_csv('validation/long_method.csv')
+    df = pd.read_csv(os.path.join('implementation', 'datasets', 'long_method.csv'))
 
     for idx, row in df.iterrows():
         response = requests.get(row.url)
@@ -65,16 +119,4 @@ def long_method_2_metrics():
         except TypeError:
             continue
 
-    # Remove columns containing only zeros
-    df = df.loc[:, (df != 0).any(axis=0)]
-    df.to_csv('./implementation/long_method.csv', index=False)
-
-
-print('Creating dataset: large_class.csv')
-large_class_2_metrics()
-
-print('Creating dataset: lazy_class.csv')
-lazy_class_2_metrics()
-
-print('Creating dataset: long_method.csv')
-long_method_2_metrics()
+    return df.drop(['url'], axis=1)
