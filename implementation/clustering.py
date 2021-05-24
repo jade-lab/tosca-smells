@@ -41,18 +41,18 @@ def label_determination(df, feature_columns, label_column, smell):
     if (
         smell == "large_class" or smell == "long_method"
     ) and label_zero_average > label_one_average:
-        df[label_column] = np.where((df[label_column] == 0), "smelly", "sound")
+        df[label_column] = np.where((df[label_column] == 0), 1, 0)
 
     elif (
         smell == "large_class" or smell == "long_method"
     ) and label_zero_average < label_one_average:
-        df[label_column] = np.where((df[label_column] == 1), "smelly", "sound")
+        df[label_column] = np.where((df[label_column] == 1), 1, 0)
 
     elif smell == "lazy_class" and label_zero_average > label_one_average:
-        df[label_column] = np.where((df[label_column] == 1), "smelly", "sound")
+        df[label_column] = np.where((df[label_column] == 1), 1, 0)
 
     elif smell == "lazy_class" and label_zero_average < label_one_average:
-        df[label_column] = np.where((df[label_column] == 0), "smelly", "sound")
+        df[label_column] = np.where((df[label_column] == 0), 1, 0)
     else:
         df[label_column] = "equal"
 
