@@ -1,23 +1,8 @@
 import os
-import pandas as pd
-import requests
-import yaml
-
-from toscametrics.metrics_extractor import extract_all
-from toscametrics.general.lines_code import LinesCode
-from toscametrics.general.num_keys import NumKeys
-from toscametrics.general.num_tokens import NumTokens
-from toscametrics.general.text_entropy import TextEntropy
-from toscametrics.blueprint.num_interfaces import NumInterfaces
-from toscametrics.blueprint.num_imports import NumImports
-from toscametrics.blueprint.num_inputs import NumInputs
-from toscametrics.blueprint.num_parameters import NumParameters
-from toscametrics.blueprint.num_properties import NumProperties
-
-import os
 import pandas
 import requests
 
+from toscametrics.metrics_extractor import extract_all
 
 blueprints = pandas.read_csv(os.path.join('data', 'tosca_blueprints.csv'))
 metrics = pandas.DataFrame()
