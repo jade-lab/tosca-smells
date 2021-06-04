@@ -78,13 +78,12 @@ for _, row in repos.iterrows():
                                     'url': f'https://raw.githubusercontent.com/{row["full_name"]}/{latest_release_hash}/{filepath}'
                                 }, ignore_index=True)
                     except UnicodeDecodeError:
-                        pass
+                        continue
 
         blueprints.to_csv(os.path.join('data', 'tosca_blueprints.csv'), index=False)
 
     except Exception as e:
         print(e)
-        pass
 
     finally:
         if os.path.isdir(path_to_local_repo):
