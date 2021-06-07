@@ -19,8 +19,12 @@ for _, row in blueprints.iterrows():
     response = requests.get(row['url'])
 
     if response.status_code == 200:
-        extracted_metrics = {'url': row['url']}
-        extracted_metrics.update(extract_all(response.content.decode()))
+
+        extracted_metrics = extract_all(response.content.decode())
+        if all(value == 0 for value in extracted_metrics.values()):
+            continue
+
+        extracted_metrics.update({'url': row['url']})
 
         if 'lines_blank' in extracted_metrics:
             del extracted_metrics['lines_blank']
