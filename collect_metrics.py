@@ -21,7 +21,12 @@ for _, row in blueprints.iterrows():
     if response.status_code == 200:
         extracted_metrics = {'url': row['url']}
         extracted_metrics.update(extract_all(response.content.decode()))
-        del extracted_metrics['lines_blank', 'lines_comment']
+
+        if 'lines_blank' in extracted_metrics:
+            del extracted_metrics['lines_blank']
+
+        if 'lines_comment' in extracted_metrics:
+            del extracted_metrics['lines_comment']
 
         metrics = metrics.append(extracted_metrics, ignore_index=True)
 
