@@ -143,7 +143,8 @@ sound_cluster = pd.concat(cluster for cluster in clusters.values() if cluster.sm
 smelly_cluster.drop(['url', 'cluster_id', 'smelly'], axis=1,  inplace=True)
 n_tests = len(smelly_cluster.columns)
 
-print('\nResults from Mann-Whitney U test')
+print('\nResults from Mann-Whitney U test. The metrics below are distributed independently from whether the blueprint '
+      'is smelly or not.')
 
 for feature in smelly_cluster.columns:
     group1 = smelly_cluster[feature]
@@ -153,7 +154,7 @@ for feature in smelly_cluster.columns:
     d = cohen_d(group1, group2)
 
     if p_value * n_tests < 0.01:
-        print(f'\'{feature}\' is distributed independently from whether the blueprint is smelly or not '
-              f'(corrected p={p_value * n_tests}, U={u_stat}, d={d} smelly: {np.mean(group1)}, sound {np.mean(group2)})')
+        print(f'{feature} (corrected p={p_value * n_tests}, U={u_stat}, d={d}, mean smelly: {int(np.mean(group1))}, '
+              f'mean sound {int(np.mean(group2))})')
 
 print(f'\nNumber of tests: {n_tests}, corrected p-value: {0.01 / n_tests}')
