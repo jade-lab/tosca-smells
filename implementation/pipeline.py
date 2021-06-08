@@ -36,6 +36,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 
 from clustering import smell_clustering
+from create_ml_datasets import (large_class_2_metrics, lazy_class_2_metrics,
+                                long_method_2_metrics)
 
 
 def pipeline(smell):
@@ -45,26 +47,14 @@ def pipeline(smell):
     else:
         feature_columns = [
             "lines_code",
-            "lines_blank",
-            "lines_comment",
-            "num_keys",
-            "num_suspicious_comments",
             "num_tokens",
-            "text_entropy",
-            "num_imports",
-            "num_inputs",
+            "entropy",
             "num_interfaces",
-            "num_node_templates",
-            "num_node_types",
-            "num_parameters",
-            "num_properties",
-            "num_relationship_templates",
-            "num_relationship_types",
-            "num_shell_scripts",
+            "num_properties"
         ]
 
     # Create results csv
-    with open(f"{smell}_results.csv", "w") as f:
+    with open(f"implementation/{smell}_results.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(
             [
@@ -87,8 +77,18 @@ def pipeline(smell):
             ]
         )
 
-    df = pd.read_csv(f"{smell}.csv", index_col="id")
+    if smell == "large_class":
+        df = large_class_2_metrics()
+    elif smell == "lazy_class":
+        df = lazy_class_2_metrics()
+    elif smell == "long_method":
+        df = long_method_2_metrics()
+    else:
+        raise TypeError(
+            f"{smell} is not a valid smell use 'large_class', 'lazy_class', or 'long_method'")
 
+    print(df.head())
+    print(df.dtypes)
     df = df.dropna(subset=feature_columns)
     # TODO df = exclude VIF features
 
@@ -96,7 +96,7 @@ def pipeline(smell):
     X = df[feature_columns]
     y = df["smelly"]
 
-    rkf = RepeatedKFold(n_splits=2, n_repeats=1, random_state=2652124)
+    rkf = RepeatedKFold(n_splits=5, n_repeats=10, random_state=2652124)
 
     counter = 0
 
@@ -134,7 +134,7 @@ def pipeline(smell):
             y_test, clustering_df["kmeans_labels"]))
 
         # 4. store results
-        with open(f"{smell}_results.csv", 'a') as f:
+        with open(f"implementation/{smell}_results.csv", 'a') as f:
             csv.writer(f).writerow(result_row)
 
         counter += 1
@@ -148,5 +148,5 @@ def performance_metrics(y_true, y_pred):
 
 
 # pipeline("large_class")
-# pipeline("lazy_class")
-# pipeline("long_method")
+pipeline("lazy_class")
+pipeline("long_method")
