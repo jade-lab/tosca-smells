@@ -9,6 +9,7 @@ Below some useful information to replicate the work:
 
 ## How to reproduce
 
+* Make sure *git* is installed on your machine
 * Install dependencies with `pip install -r requirements.txt`
 * Run `python clustering.py` for the experiment and to generate **data/clusters.csv** 
 
