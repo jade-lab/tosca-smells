@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import re
 import shutil
 
 from pydriller.repository import Repository, Git
@@ -72,7 +73,7 @@ for _, row in repos.iterrows():
                     # Read the file content to check if tosca_definitions in file
                     try:
                         with open(os.path.join(path_to_local_repo, filepath), 'r') as f:
-                            if 'tosca_definitions_version' in f.read():
+                            if re.match(r'^tosca_definitions_version\s*:.+', f.read()):
                                 blueprints = blueprints.append({
                                     'repo_id': row['id'],
                                     'url': f'https://raw.githubusercontent.com/{row["full_name"]}/{latest_release_hash}/{filepath}'
