@@ -22,4 +22,4 @@ Below some useful information to replicate the work:
   raw content of every blueprint and extract the metrics used in this study.
 * `data/clusters.csv` is generated running `python clustering.py`. This is the only script that has to be run to
   replicate the study. In addition, it shows information about the statistical analysis.
-  
+* `data/validation.csv` is a static file containing the validation results among the assessors.  

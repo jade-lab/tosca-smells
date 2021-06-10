@@ -20,17 +20,25 @@ for _, row in blueprints.iterrows():
 
     if response.status_code == 200:
 
-        extracted_metrics = extract_all(response.content.decode())
+        try:
+            extracted_metrics = extract_all(response.content.decode())
+        except TypeError:
+            continue
+        except Exception as e:
+            print(e)
+
         if all(value == 0 for value in extracted_metrics.values()):
             continue
 
+        for key in list(extracted_metrics):
+            if key not in ('lines_code', 'num_capabilities', 'num_imports', 'num_inputs', 'num_interfaces', 'num_keys',
+                           'num_node_templates', 'num_node_types', 'num_parameters', 'num_properties',
+                           'num_relationship_templates', 'num_relationship_types', 'num_requirements',
+                           'num_shell_scripts', 'num_suspicious_comments', 'num_tokens', 'text_entropy'):
+
+                del extracted_metrics[key]
+
         extracted_metrics.update({'url': row['url']})
-
-        if 'lines_blank' in extracted_metrics:
-            del extracted_metrics['lines_blank']
-
-        if 'lines_comment' in extracted_metrics:
-            del extracted_metrics['lines_comment']
 
         metrics = metrics.append(extracted_metrics, ignore_index=True)
 

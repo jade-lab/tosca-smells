@@ -81,6 +81,7 @@ for _, row in repos.iterrows():
                     except UnicodeDecodeError:
                         continue
 
+        blueprints.drop_duplicates(inplace=True)
         blueprints.to_csv(os.path.join('data', 'tosca_blueprints.csv'), index=False)
 
     except Exception as e:

@@ -12,8 +12,10 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 metrics = pd.read_csv(os.path.join('data', 'metrics.csv')).fillna(0)
 
+print(metrics.shape)
 # 1. Remove duplicates
 metrics.drop_duplicates(subset=metrics.columns.difference(['url']), inplace=True)
+print(metrics.shape)
 
 X = metrics.drop(['url'], axis=1)
 
@@ -154,7 +156,7 @@ for feature in smelly_cluster.columns:
     d = cohen_d(group1, group2)
 
     if p_value * n_tests < 0.01:
-        print(f'{feature} (corrected p={p_value * n_tests}, U={u_stat}, d={d}, mean smelly: {int(np.mean(group1))}, '
+        print(f'{feature} (corrected p={p_value * n_tests}, U={u_stat}, d={d}, mean smelly: {round(np.mean(group1))}, '
               f'mean sound {int(np.mean(group2))})')
 
 print(f'\nNumber of tests: {n_tests}, corrected p-value: {0.01 / n_tests}')
