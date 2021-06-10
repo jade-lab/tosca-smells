@@ -157,6 +157,6 @@ for feature in smelly_cluster.columns:
 
     if p_value * n_tests < 0.01:
         print(f'{feature} (corrected p={p_value * n_tests}, U={u_stat}, d={d}, mean smelly: {round(np.mean(group1))}, '
-              f'mean sound {int(np.mean(group2))})')
+              f'mean sound {round(np.mean(group2))})')
 
 print(f'\nNumber of tests: {n_tests}, corrected p-value: {0.01 / n_tests}')
