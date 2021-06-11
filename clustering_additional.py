@@ -19,8 +19,10 @@ X = metrics.drop(['url'], axis=1)
 # Remove correlated variables (i.e., features for which VIF > 10)
 core.reduce_multicollinearity(X)
 
-# Normalize dataset
-normalizer, X = core.normalize(X)
+# Normalize dataset dividing observations for lines of code
+X = metrics.drop(['url'], axis=1)
+X = X.div(X.lines_code, axis=0)
+X = X.drop(['lines_code'], axis=1)
 
 # Cluster data with KMeans
 N_CLUSTERS = 2
@@ -47,17 +49,7 @@ for id, cluster in clusters.items():
 id_highest_asfm = max(asfm, key=asfm.get)
 
 for cluster_id, cluster_df in clusters.items():
-
-    # Temporary removing URLS to avoid errors when performing the inverse_transform below
-    urls = cluster_df.url.to_list()
-    cluster_df.drop(['url'], axis=1, inplace=True)
-
-    # Transforming back to original metric values
-    columns = cluster_df.columns
-    clusters[cluster_id] = pd.DataFrame(normalizer.inverse_transform(cluster_df), columns=columns)
-
     clusters[cluster_id]["cluster_id"] = cluster_id
-    clusters[cluster_id]["url"] = urls
 
     if cluster_id == id_highest_asfm:
         clusters[cluster_id]["smelly"] = True

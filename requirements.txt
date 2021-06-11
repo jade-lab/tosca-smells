@@ -6,4 +6,5 @@ requests~=2.25.1
 scikit-learn~=0.24.2
 scipy~=1.6.3
 statsmodels~=0.12.2
+tabulate~=0.8.9
 tosca-metrics~=0.0.9
