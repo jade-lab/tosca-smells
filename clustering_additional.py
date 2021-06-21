@@ -58,7 +58,7 @@ for cluster_id, cluster_df in clusters.items():
 
 # Merge smelly and sound clusters and save to disk
 merged_clusters = pd.concat(cluster for cluster in clusters.values())[['cluster_id', 'url', 'smelly']]
-merged_clusters.to_csv(os.path.join('data', 'clusters.csv'), index=False)
+merged_clusters.to_csv(os.path.join('data', 'clusters_additional.csv'), index=False)
 
 # Statistical Analysis
 smelly_cluster = pd.concat(cluster for cluster in clusters.values() if cluster.smelly.to_list().count(True) > 0)

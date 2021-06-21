@@ -85,7 +85,7 @@ def calculate_performance(clusters: pd.DataFrame):
     validation_set = pd.read_csv(os.path.join('data', 'validation.csv'))
     validation_set = validation_set.merge(clusters[['url', 'smelly']], on='url')
 
-    y_true = validation_set.stefano.to_list()
+    y_true = validation_set.final.to_list()
     y_pred = validation_set.smelly.to_list()
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
