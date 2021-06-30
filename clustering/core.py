@@ -9,7 +9,7 @@ from sklearn.preprocessing import RobustScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
-def reduce_multicollinearity(df: pd.DataFrame):
+def reduce_multicollinearity(df: pd.DataFrame, threshold: int = 10):
     vif_results = pd.DataFrame()
 
     while True:
@@ -17,7 +17,7 @@ def reduce_multicollinearity(df: pd.DataFrame):
         vif_data["feature"] = df.columns
         vif_data["VIF"] = [variance_inflation_factor(df.values, i) for i in range(len(df.columns))]
 
-        if any([vif > 10 for vif in vif_data.VIF]):
+        if any([vif > threshold for vif in vif_data.VIF]):
             # Remove feature with the highest VIF
             idx = vif_data[['VIF']].idxmax().iloc[0]
             df.drop(vif_data.iloc[idx].feature, axis=1, inplace=True)
@@ -31,7 +31,7 @@ def reduce_multicollinearity(df: pd.DataFrame):
             break
 
     print(f'\n[MULTICOLLINEARITY REDUCTION] Metrics removed from the dataset as result of multicollinearity reduction '
-          f'(VIF > 10):')
+          f'(VIF > {threshold}):')
     print(vif_results.to_markdown(index=False, tablefmt="grid"))
 
 
@@ -55,7 +55,13 @@ def cohen_d(d1, d2):
 
 
 def statistical_analysis(cluster_smelly: pd.DataFrame, cluster_sound: pd.DataFrame):
-    cluster_smelly = cluster_smelly.drop(['url', 'cluster_id', 'smelly'], axis=1)
+
+    if 'url' in cluster_smelly.columns:
+        cluster_smelly.drop(['url'], axis=1, inplace=True)
+    if 'cluster_id' in cluster_smelly.columns:
+        cluster_smelly.drop(['cluster_id'], axis=1, inplace=True)
+    if 'smelly' in cluster_smelly.columns:
+        cluster_smelly.drop(['smelly'], axis=1, inplace=True)
 
     stat_results = pd.DataFrame()
     n_tests = cluster_smelly.columns.size

@@ -13,7 +13,7 @@ for _, row in blueprints.iterrows():
     i += 1
     print(f'({i}/{blueprints.shape[0]}) Collecting metrics for', row['url'])
 
-    if 'examples/' in row['url']:
+    if 'example' in row['url']:
         continue
 
     response = requests.get(row['url'])
@@ -31,10 +31,20 @@ for _, row in blueprints.iterrows():
             continue
 
         for key in list(extracted_metrics):
-            if key not in ('lines_code', 'num_capabilities', 'num_imports', 'num_inputs', 'num_interfaces', 'num_keys',
-                           'num_node_templates', 'num_node_types', 'num_parameters', 'num_properties',
-                           'num_relationship_templates', 'num_relationship_types', 'num_requirements',
-                           'num_shell_scripts', 'num_suspicious_comments', 'num_tokens', 'text_entropy'):
+            if key not in ('lines_code',
+                           'num_interfaces',
+                           'num_properties',
+                           'num_imports',
+                           'num_node_templates', 'num_node_types',
+                           'num_relationship_templates', 'num_relationship_types',
+                           'num_capabilities',
+                           'num_requirements',
+                           'num_inputs',
+                           'num_keys',
+                           'num_suspicious_comments',
+                           'num_tokens',
+                           'lcot',
+                           'text_entropy'):
 
                 del extracted_metrics[key]
 
