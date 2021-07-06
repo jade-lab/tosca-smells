@@ -12,11 +12,10 @@ Below some useful information to replicate the work.
 
 * Make sure *git* is installed on your machine
 * Install dependencies with `pip install -r requirements.txt`
-* Run `python clustering.py` for the experiment and to generate **data/clusters.csv** 
+* Run `python clustering/clustering.py` for the experiment and to generate **data/clusters.csv** 
 
 ### Additional analysis
-Run `python clustering_additional.py` for the additional experiment where metrics are normalized by code lines and to 
-generate **data/clusters_additional.csv**. 
+Run `python cluster/clustering_*.py` for the additional experiments.
 
 ## Additional information
 
