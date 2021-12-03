@@ -9,7 +9,7 @@ from sklearn.preprocessing import RobustScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
-def reduce_multicollinearity(df: pd.DataFrame, threshold: int = 10):
+def reduce_multicollinearity(df: pd.DataFrame, threshold: int = 10, print_result: bool = True):
     vif_results = pd.DataFrame()
 
     while True:
@@ -30,9 +30,10 @@ def reduce_multicollinearity(df: pd.DataFrame, threshold: int = 10):
         else:
             break
 
-    print(f'\n[MULTICOLLINEARITY REDUCTION] Metrics removed from the dataset as result of multicollinearity reduction '
-          f'(VIF > {threshold}):')
-    print(vif_results.to_markdown(index=False, tablefmt="grid"))
+    if print_result:
+        print(f'\n[MULTICOLLINEARITY REDUCTION] Metrics removed from the dataset as result of multicollinearity '
+              f'reduction (VIF > {threshold}):')
+        print(vif_results.to_markdown(index=False, tablefmt="grid"))
 
 
 def normalize(df: pd.DataFrame):
@@ -55,7 +56,6 @@ def cohen_d(d1, d2):
 
 
 def statistical_analysis(cluster_smelly: pd.DataFrame, cluster_sound: pd.DataFrame):
-
     if 'url' in cluster_smelly.columns:
         cluster_smelly.drop(['url'], axis=1, inplace=True)
     if 'cluster_id' in cluster_smelly.columns:
@@ -87,7 +87,7 @@ def statistical_analysis(cluster_smelly: pd.DataFrame, cluster_sound: pd.DataFra
     print(stat_results.to_markdown(index=False, tablefmt="grid"))
 
 
-def calculate_performance(clusters: pd.DataFrame):
+def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
     validation_set = pd.read_csv(os.path.join('data', 'validation.csv'))
     validation_set = validation_set.merge(clusters[['url', 'smelly']], on='url')
 
@@ -95,8 +95,7 @@ def calculate_performance(clusters: pd.DataFrame):
     y_pred = validation_set.smelly.to_list()
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
-    performance = pd.DataFrame()
-    performance = performance.append({
+    performance = {
         'precision': round(precision_score(y_true, y_pred), 4),
         'recall': round(recall_score(y_true, y_pred), 4),
         'mcc': round(matthews_corrcoef(y_true, y_pred), 4),
@@ -104,7 +103,9 @@ def calculate_performance(clusters: pd.DataFrame):
         'tn': tn,
         'fp': fp,
         'fn': fn
-    }, ignore_index=True)
+    }
 
-    print('\n[PERFORMANCE] Performance relying on comparison with the validation dataset:')
-    print(performance.to_markdown(index=False, tablefmt="grid"))
+    if print_result:
+        print('\n[PERFORMANCE] Performance relying on comparison with the validation dataset:')
+        print(pd.DataFrame().append(performance, ignore_index=True).to_markdown(index=False, tablefmt="grid"))
+    return performance
