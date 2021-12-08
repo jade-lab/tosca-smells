@@ -10,12 +10,21 @@ Below some useful information to replicate the work.
 
 ## How to reproduce
 
-* Make sure *git* is installed on your machine
-* Install dependencies with `pip install -r requirements.txt`
-* Run `python clustering/clustering.py` for the experiment and to generate **data/clusters.csv** 
+* **(Optional)** Create a virtual environment:
+```commandline
+virtualenv venv
+source venv/bin/activate
+```
 
-### Additional analysis
-Run `python cluster/clustering_*.py` for the additional experiments.
+* Install dependencies and run the program:
+```commandline
+pip install -r requirements.txt
+python main.py
+```
+
+Follow the instructions in the terminal to run the desired experiment.
+
+
 
 ## Additional information
 
