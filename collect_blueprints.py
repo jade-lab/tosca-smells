@@ -57,8 +57,8 @@ for _, row in repos.iterrows():
 
             for filepath in get_files(path_to_local_repo):
 
-                if 'test' in filepath:
-                    # Ignore files used for test
+                # Ignore files used for test or as examples
+                if 'test' in filepath or 'example' in filepath:
                     continue
 
                 _, extension = os.path.splitext(filepath)
