@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 
-from sklearn.metrics import confusion_matrix, matthews_corrcoef, precision_score, recall_score
+from sklearn.metrics import confusion_matrix, matthews_corrcoef, precision_score, recall_score, adjusted_rand_score
 from sklearn.preprocessing import RobustScaler
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -99,6 +99,7 @@ def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
         'precision': round(precision_score(y_true, y_pred), 4),
         'recall': round(recall_score(y_true, y_pred), 4),
         'mcc': round(matthews_corrcoef(y_true, y_pred), 4),
+        'ari': round(adjusted_rand_score(y_true, y_pred), 4),
         'tp': tp,
         'tn': tn,
         'fp': fp,
@@ -108,4 +109,5 @@ def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
     if print_result:
         print('\n[PERFORMANCE] Performance relying on comparison with the validation dataset:')
         print(pd.DataFrame().append(performance, ignore_index=True).to_markdown(index=False, tablefmt="grid"))
+
     return performance

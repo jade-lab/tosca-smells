@@ -24,10 +24,10 @@ class MahalanobisExperiment(AbstractExperiment):
 
         # calculate Mahalanobis distances for each row
         distances = mahalanobis(x=dataset, data=dataset[dataset.columns])
-        degrees_of_freedom = dataset.shape[1] - 1
+        degrees_of_freedom = dataset.shape[1] # - 1
 
         # calculate p-value for each mahalanobis distance
         dataset_loc['p'] = 1 - chi2.cdf(distances, degrees_of_freedom)
 
         for idx, row in dataset_loc.iterrows():
-            yield idx, row['p'] < 0.01
+            yield idx, row['p'] < 0.001

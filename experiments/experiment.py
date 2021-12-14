@@ -12,13 +12,26 @@ class AbstractExperiment:
     def __init__(self, n_repeats: int = 100):
         random.seed(42)
 
-        # Store the values of MCC, precision, and recall across the experiment iterations
+        # Store the values of ARI, MCC, precision, and recall across the experiment iterations
+        self.ari = []
         self.mcc = []
         self.precision = []
         self.recall = []
 
-        # Load dataset
+        # Load metrics dataset
         metrics_df = pd.read_csv(os.path.join('data', 'metrics.csv')).fillna(0)
+
+        print(metrics_df.shape[0])
+        # Remove duplicates based on metrics value
+        metrics_df.drop_duplicates(subset=metrics_df.columns.difference(['url']), inplace=True)
+        print(metrics_df.shape[0])
+
+        # Node templates + Relationship templates = num_templates (as define in puppet (abstraction))
+        metrics_df['num_types_and_templates'] = metrics_df[['num_node_templates', 'num_relationship_templates',
+                                                            'num_node_types', 'num_relationship_types']].sum(axis=1)
+
+        # metrics_df = metrics_df[['url', 'lines_code', 'lcot', 'num_templates', 'num_properties', 'num_interfaces']]
+        metrics_df = metrics_df[['url', 'lines_code', 'lcot', 'num_types_and_templates']]
 
         # Create n_repeats evaluation datasets to run the algorithms on
         self.evaluation_sets = []
@@ -26,14 +39,27 @@ class AbstractExperiment:
         for i in range(0, n_repeats):
             self.evaluation_sets.append(metrics_df.sample(n=random.randint(100, metrics_df.shape[0]), random_state=42))
 
-    def run(self):
+    def run(self, multicollinearity_reduction: bool = True):
+        """
+
+        Parameters
+        ----------
+        multicollinearity_reduction : bool
+            if to reduce multicollinearity among predictors (where VIF > 10)
+
+        Returns
+        -------
+        None
+
+        """
         for i in progressbar.progressbar(range(len(self.evaluation_sets))):
 
             # Prepare data
             X = self.evaluation_sets[i].drop(['url'], axis=1)
 
             # Remove correlated variables (i.e., features for which VIF > 10)
-            reduce_multicollinearity(X, print_result=False)
+            if multicollinearity_reduction:
+                reduce_multicollinearity(X, print_result=False)
 
             # Normalize dataset
             _, X = normalize(X)
@@ -43,6 +69,7 @@ class AbstractExperiment:
 
             performance = calculate_performance(self.evaluation_sets[i].assign(smelly=X.smelly.to_list()),
                                                 print_result=False)
+            self.ari.append(performance['ari'])
             self.mcc.append(performance['mcc'])
             self.precision.append(performance['precision'])
             self.recall.append(performance['recall'])
@@ -64,7 +91,10 @@ class AbstractExperiment:
         """
         yield NotImplementedError
 
-    def print_performance(self):
-        print(f'Median MCC: {np.median(self.mcc)}\n' +
-              f'Median precision: {np.median(self.precision)}\n' +
-              f'Median recall: {np.median(self.recall)}')
+    def print_performance(self, decimals: int = 4):
+
+        print(
+            f'ARI(median, mean, std): ({np.round(np.median(self.ari), decimals)}, {np.round(np.mean(self.ari), decimals)}, {np.round(np.std(self.ari), decimals)})\n' +
+            f'MCC(median, mean, std): ({np.round(np.median(self.mcc), decimals)}, {np.round(np.mean(self.mcc), decimals)}, {np.round(np.std(self.mcc), decimals)})\n' +
+            f'Precision(median, mean, std): ({np.round(np.median(self.precision), decimals)}, {np.round(np.mean(self.precision), decimals)}, {np.round(np.std(self.precision), decimals)})\n' +
+            f'Recall(median, mean, std): ({np.round(np.median(self.recall), decimals)}, {np.round(np.mean(self.recall), decimals)}, {np.round(np.std(self.recall), decimals)})')

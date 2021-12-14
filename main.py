@@ -1,3 +1,44 @@
+from experiments.clustering import ClusteringExperiment
+from experiments.iqr import IQRExperiment
+from experiments.mahalanobis import MahalanobisExperiment
+from experiments.threshold import StaticThresholdExperiment
+
+print('Enter:\n- 1 to reproduce the experiment using the Mahalanobis distance.\n- 2 to reproduce the experiment '
+      'using the IQR rule.\n- 3 to reproduce the experiment using KMeans.\n- 4 to '
+      'reproduce the experiment using AgglomerativeClustering.\nChoice:', end=' ')
+value = input()
+
+if value == '1':
+    experiment = MahalanobisExperiment(n_repeats=10)
+    experiment.run()
+    experiment.print_performance()
+elif value == '2':
+    experiment = IQRExperiment(n_repeats=100)
+    experiment.run()
+    experiment.print_performance()
+if value == '3':
+    experiment = ClusteringExperiment(n_repeats=100, method='kmeans')
+    experiment.run()
+    experiment.print_performance()
+if value == '4':
+    experiment = ClusteringExperiment(n_repeats=100, method='agglomerative')
+    experiment.run()
+    experiment.print_performance()
+if value == '5':
+    experiment = ClusteringExperiment(n_repeats=100, method='spectral')
+    experiment.run()
+    experiment.print_performance()
+if value == '9':
+    experiment = StaticThresholdExperiment(n_repeats=100)
+    experiment.run()
+    experiment.print_performance()
+else:
+    exit(0)
+
+
+
+exit()
+
 # EXAMPLE OF USAGE:
 # python main.py {1, 2, 3, 4} {kmeans, agglomerative}
 
