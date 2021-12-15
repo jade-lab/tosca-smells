@@ -1,7 +1,9 @@
+cliffs-delta~=1.0.0
 matplotlib~=3.4.2
 numpy~=1.20.3
 pandas~=1.2.0
 progressbar2~=3.55.0
+plotly~=5.4.0
 pyamg~=4.1.0
 pydriller~=2.0
 requests~=2.25.1

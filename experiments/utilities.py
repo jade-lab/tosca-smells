@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 
+from cliffs_delta import cliffs_delta
 from sklearn.metrics import confusion_matrix, matthews_corrcoef, precision_score, recall_score, adjusted_rand_score
 from sklearn.preprocessing import RobustScaler
 
@@ -40,51 +41,6 @@ def normalize(df: pd.DataFrame):
     columns = df.columns
     normalizer = RobustScaler()
     return normalizer, pd.DataFrame(normalizer.fit_transform(df), columns=columns)
-
-
-def cohen_d(d1, d2):
-    # calculate the size of samples
-    n1, n2 = len(d1), len(d2)
-    # calculate the variance of the samples
-    s1, s2 = np.var(d1, ddof=1), np.var(d2, ddof=1)
-    # calculate the pooled standard deviation
-    s = np.sqrt(((n1 - 1) * s1 + (n2 - 1) * s2) / (n1 + n2 - 2))
-    # calculate the means of the samples
-    u1, u2 = np.mean(d1), np.mean(d2)
-    # calculate the effect size
-    return (u1 - u2) / s
-
-
-def statistical_analysis(cluster_smelly: pd.DataFrame, cluster_sound: pd.DataFrame):
-    if 'url' in cluster_smelly.columns:
-        cluster_smelly.drop(['url'], axis=1, inplace=True)
-    if 'cluster_id' in cluster_smelly.columns:
-        cluster_smelly.drop(['cluster_id'], axis=1, inplace=True)
-    if 'smelly' in cluster_smelly.columns:
-        cluster_smelly.drop(['smelly'], axis=1, inplace=True)
-
-    stat_results = pd.DataFrame()
-    n_tests = cluster_smelly.columns.size
-
-    for feature in cluster_smelly.columns:
-
-        u_stat, p_value = stats.mannwhitneyu(cluster_smelly[feature], cluster_sound[feature], alternative='greater')
-        d = cohen_d(cluster_smelly[feature], cluster_sound[feature])
-
-        if p_value * n_tests < 0.01:
-            stat_results = stat_results.append({
-                'feature': feature.upper(),
-                'p-value': p_value,
-                'p-value corrected': p_value * n_tests,
-                'U': u_stat,
-                'cohen_d': d,
-                'mean smelly': round(np.mean(cluster_smelly[feature])),
-                'mean sound': round(np.mean(cluster_sound[feature]))
-            }, ignore_index=True)
-
-    print(f'\n[STATISTICAL ANALYSIS] Results of the statistical analysis with {n_tests} comparisons and a corrected '
-          f'significance level alpha = {round(0.01 / n_tests, 4)} according to Bonferroni\'s correction:')
-    print(stat_results.to_markdown(index=False, tablefmt="grid"))
 
 
 def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):

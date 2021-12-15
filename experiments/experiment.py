@@ -12,32 +12,31 @@ class AbstractExperiment:
     def __init__(self, n_repeats: int = 100):
         random.seed(42)
 
-        # Store the values of ARI, MCC, precision, and recall across the experiment iterations
-        self.ari = []
-        self.mcc = []
-        self.precision = []
-        self.recall = []
+        # Store the values of ARI, MCC, Precision, and Recall across the experiment iterations
+        self.performance_df = pd.DataFrame()
 
         # Load metrics dataset
         metrics_df = pd.read_csv(os.path.join('data', 'metrics.csv')).fillna(0)
 
-        print(metrics_df.shape[0])
         # Remove duplicates based on metrics value
-        metrics_df.drop_duplicates(subset=metrics_df.columns.difference(['url']), inplace=True)
-        print(metrics_df.shape[0])
+        metrics_df.drop_duplicates(subset=metrics_df.columns.difference(['url']), keep='first', inplace=True)
 
         # Node templates + Relationship templates = num_templates (as define in puppet (abstraction))
         metrics_df['num_types_and_templates'] = metrics_df[['num_node_templates', 'num_relationship_templates',
                                                             'num_node_types', 'num_relationship_types']].sum(axis=1)
+        metrics_df['complexity'] = metrics_df[['lcot', 'num_interfaces', 'num_properties']].sum(axis=1)
 
-        # metrics_df = metrics_df[['url', 'lines_code', 'lcot', 'num_templates', 'num_properties', 'num_interfaces']]
-        metrics_df = metrics_df[['url', 'lines_code', 'lcot', 'num_types_and_templates']]
+        metrics_df = metrics_df[['url', 'lines_code', 'num_types_and_templates', 'complexity']]
 
         # Create n_repeats evaluation datasets to run the algorithms on
         self.evaluation_sets = []
 
-        for i in range(0, n_repeats):
-            self.evaluation_sets.append(metrics_df.sample(n=random.randint(100, metrics_df.shape[0]), random_state=42))
+        if n_repeats == 1:
+            # Use the entire original dataset
+            self.evaluation_sets.append(metrics_df)
+        else:
+            for i in range(0, n_repeats):
+                self.evaluation_sets.append(metrics_df.sample(n=random.randint(290, metrics_df.shape[0]), random_state=42))
 
     def run(self, multicollinearity_reduction: bool = True):
         """
@@ -69,10 +68,13 @@ class AbstractExperiment:
 
             performance = calculate_performance(self.evaluation_sets[i].assign(smelly=X.smelly.to_list()),
                                                 print_result=False)
-            self.ari.append(performance['ari'])
-            self.mcc.append(performance['mcc'])
-            self.precision.append(performance['precision'])
-            self.recall.append(performance['recall'])
+
+            self.performance_df = self.performance_df.append({
+                'ari': performance['ari'],
+                'mcc': performance['mcc'],
+                'precision': performance['precision'],
+                'recall': performance['recall'],
+            }, ignore_index=True)
 
     def detect_smells(self, dataset: pd.DataFrame):
         """ For every observation in the dataset, compute the detection strategy and return a generator consisting of
@@ -90,11 +92,3 @@ class AbstractExperiment:
             The tuple (int, bool) of index and smelliness for that observation
         """
         yield NotImplementedError
-
-    def print_performance(self, decimals: int = 4):
-
-        print(
-            f'ARI(median, mean, std): ({np.round(np.median(self.ari), decimals)}, {np.round(np.mean(self.ari), decimals)}, {np.round(np.std(self.ari), decimals)})\n' +
-            f'MCC(median, mean, std): ({np.round(np.median(self.mcc), decimals)}, {np.round(np.mean(self.mcc), decimals)}, {np.round(np.std(self.mcc), decimals)})\n' +
-            f'Precision(median, mean, std): ({np.round(np.median(self.precision), decimals)}, {np.round(np.mean(self.precision), decimals)}, {np.round(np.std(self.precision), decimals)})\n' +
-            f'Recall(median, mean, std): ({np.round(np.median(self.recall), decimals)}, {np.round(np.mean(self.recall), decimals)}, {np.round(np.std(self.recall), decimals)})')

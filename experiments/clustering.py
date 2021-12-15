@@ -77,7 +77,6 @@ class ClusteringExperiment(AbstractExperiment):
             for idx, _ in cluster_df.iterrows():
                 yield idx, is_smelly
 
-
 def agglomerative_clustering_random_search(dataset):
     best_configuration = (None, {}, 0)  # (cluster_labels, parameters, silhouette_score)
 
