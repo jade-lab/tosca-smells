@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import warnings
 
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, precision_score, recall_score, adjusted_rand_score
 from sklearn.preprocessing import RobustScaler
@@ -48,11 +49,15 @@ def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
     y_pred = validation_set.smelly.to_list()
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        mcc = round(matthews_corrcoef(y_true, y_pred), 4)
+
     performance = {
         'f1': round(f1_score(y_true, y_pred, zero_division=0), 4),
         'precision': round(precision_score(y_true, y_pred, zero_division=0), 4),
         'recall': round(recall_score(y_true, y_pred, zero_division=0), 4),
-        'mcc': round(matthews_corrcoef(y_true, y_pred), 4),
+        'mcc': mcc,
         'ari': round(adjusted_rand_score(y_true, y_pred), 4),
         'tp': tp,
         'tn': tn,
