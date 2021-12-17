@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
-import seaborn as sns
+
 
 def main():
     # Load data
     plot_data = pd.DataFrame()
 
-    for algorithm in ('birch', 'iqr', 'kmeans', 'mahalanobis', 'mean_shift'):
+    for algorithm in ('agglomerative', 'birch', 'iqr', 'kmeans', 'mahalanobis', 'mean_shift'):
 
         for _, row in pd.read_csv(os.path.join('data', f'performance_{algorithm}.csv')).iterrows():
             plot_data = plot_data.append([{
@@ -34,10 +34,10 @@ def main():
 
     # Violin plot for each evaluation measure
     for measure in ('mcc', 'f1'):
-
         # Violin plot to compare techniques (MCC)
         iqr_mask = (plot_data.algorithm == 'iqr') & (plot_data.measure == measure)
         mahalanobis_mask = (plot_data.algorithm == 'mahalanobis') & (plot_data.measure == measure)
+        agglomerative_mask = (plot_data.algorithm == 'agglomerative') & (plot_data.measure == measure)
         birch_mask = (plot_data.algorithm == 'birch') & (plot_data.measure == measure)
         kmeans_mask = (plot_data.algorithm == 'kmeans') & (plot_data.measure == measure)
         mean_shift_mask = (plot_data.algorithm == 'mean_shift') & (plot_data.measure == measure)
@@ -46,14 +46,15 @@ def main():
         fig.suptitle(f'{measure.upper()} across techniques')
         ax.violinplot([plot_data[iqr_mask].value,
                        plot_data[mahalanobis_mask].value,
+                       plot_data[agglomerative_mask].value,
                        plot_data[birch_mask].value,
                        plot_data[kmeans_mask].value,
                        plot_data[mean_shift_mask].value],
                       showmedians=True,
                       showextrema=True,
-                      quantiles=[(0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75)])
+                      quantiles=[(0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75)])
 
-        ax.set_xticks([1, 2, 3, 4, 5])
-        ax.set_xticklabels(['IQR', 'Mahalanobis', 'Birch', 'KMeans', 'MeanShift'])
+        ax.set_xticks([1, 2, 3, 4, 5, 6])
+        ax.set_xticklabels(['IQR', 'Mahalanobis', 'Agglomerative', 'Birch', 'KMeans', 'MeanShift'])
         plt.ylabel = measure.upper()
         plt.show()

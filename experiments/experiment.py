@@ -1,5 +1,4 @@
 import os
-import numpy as np
 import pandas as pd
 import progressbar
 import random
@@ -69,13 +68,7 @@ class AbstractExperiment:
             performance = calculate_performance(self.evaluation_sets[i].assign(smelly=X.smelly.to_list()),
                                                 print_result=False)
 
-            self.performance_df = self.performance_df.append({
-                'ari': performance['ari'],
-                'mcc': performance['mcc'],
-                'f1': performance['f1'],
-                'precision': performance['precision'],
-                'recall': performance['recall'],
-            }, ignore_index=True)
+            self.performance_df = self.performance_df.append(performance, ignore_index=True)
 
     def detect_smells(self, dataset: pd.DataFrame):
         """ For every observation in the dataset, compute the detection strategy and return a generator consisting of
