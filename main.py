@@ -1,8 +1,7 @@
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
 
-from experiments import exploratory_analysis, statistical_analysis
+from experiments import exploratory_analysis, plot_performance, statistical_analysis
 
 from experiments.clustering import ClusteringExperiment
 from experiments.iqr import IQRExperiment
@@ -21,6 +20,9 @@ if value == '1':
 
 elif value == '3':
     statistical_analysis.main()
+
+elif value == '4':
+    plot_performance.main()
 
 if value == '20':
     experiment = ClusteringExperiment(n_repeats=N_REPEATS, method='spectral')  # ok (but warnings)
@@ -81,24 +83,6 @@ elif value == '0':
         performance_local.to_csv(os.path.join('data', f'descriptive_performance_{algorithm}.csv'), index=False)
 
     exit()
-    # Violin plot to compare techniques (MCC)
-    iqr_mcc_mask = (plot_data.algorithm == 'iqr') & (plot_data.measure == 'mcc')
-    mahalanobis_mcc_mask = (plot_data.algorithm == 'mahalanobis') & (plot_data.measure == 'mcc')
-    birch_mcc_mask = (plot_data.algorithm == 'birch') & (plot_data.measure == 'mcc')
-    kmeans_mcc_mask = (plot_data.algorithm == 'kmeans') & (plot_data.measure == 'mcc')
-    mean_shift_mcc_mask = (plot_data.algorithm == 'mean_shift') & (plot_data.measure == 'mcc')
-
-    fig, ax = plt.subplots()
-    ax.violinplot([plot_data[iqr_mcc_mask].value,
-                   plot_data[mahalanobis_mcc_mask].value,
-                   plot_data[birch_mcc_mask].value,
-                   plot_data[kmeans_mcc_mask].value,
-                   plot_data[mean_shift_mcc_mask].value], showmedians=True, showextrema=True)
-
-    xticklabels = ['IQR', 'Mahalanobis', 'Birch', 'KMeans', 'MeanShift']
-    ax.set_xticks([1, 2, 3, 4, 5])
-    ax.set_xticklabels(xticklabels)
-    plt.show()
 
 
 else:
