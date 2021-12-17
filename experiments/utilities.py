@@ -1,10 +1,7 @@
 import os
-import numpy as np
 import pandas as pd
-import scipy.stats as stats
 
-from cliffs_delta import cliffs_delta
-from sklearn.metrics import confusion_matrix, matthews_corrcoef, precision_score, recall_score, adjusted_rand_score
+from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, precision_score, recall_score, adjusted_rand_score
 from sklearn.preprocessing import RobustScaler
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -52,6 +49,7 @@ def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
     performance = {
+        'f1': round(f1_score(y_true, y_pred), 4),
         'precision': round(precision_score(y_true, y_pred), 4),
         'recall': round(recall_score(y_true, y_pred), 4),
         'mcc': round(matthews_corrcoef(y_true, y_pred), 4),

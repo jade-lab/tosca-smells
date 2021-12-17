@@ -26,7 +26,7 @@ class AbstractExperiment:
                                                             'num_node_types', 'num_relationship_types']].sum(axis=1)
         metrics_df['complexity'] = metrics_df[['lcot', 'num_interfaces', 'num_properties']].sum(axis=1)
 
-        metrics_df = metrics_df[['url', 'lines_code', 'num_types_and_templates', 'complexity']]
+        metrics_df = metrics_df[['url', 'lines_code', 'num_types_and_templates', 'lcot']]
 
         # Create n_repeats evaluation datasets to run the algorithms on
         self.evaluation_sets = []
@@ -72,6 +72,7 @@ class AbstractExperiment:
             self.performance_df = self.performance_df.append({
                 'ari': performance['ari'],
                 'mcc': performance['mcc'],
+                'f1': performance['f1'],
                 'precision': performance['precision'],
                 'recall': performance['recall'],
             }, ignore_index=True)
