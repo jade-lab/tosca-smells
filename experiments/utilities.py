@@ -49,9 +49,9 @@ def calculate_performance(clusters: pd.DataFrame, print_result: bool = True):
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
     performance = {
-        'f1': round(f1_score(y_true, y_pred), 4),
-        'precision': round(precision_score(y_true, y_pred), 4),
-        'recall': round(recall_score(y_true, y_pred), 4),
+        'f1': round(f1_score(y_true, y_pred, zero_division=0), 4),
+        'precision': round(precision_score(y_true, y_pred, zero_division=0), 4),
+        'recall': round(recall_score(y_true, y_pred, zero_division=0), 4),
         'mcc': round(matthews_corrcoef(y_true, y_pred), 4),
         'ari': round(adjusted_rand_score(y_true, y_pred), 4),
         'tp': tp,
