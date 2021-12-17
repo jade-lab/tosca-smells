@@ -9,7 +9,7 @@ def main():
     # Load data
     plot_data = pd.DataFrame()
 
-    for algorithm in ('birch', 'iqr', 'kmeans', 'mahalanobis', 'mean_shift'):
+    for algorithm in ('agglomerative', 'birch', 'iqr', 'kmeans', 'mahalanobis', 'mean_shift'):
 
         for _, row in pd.read_csv(os.path.join('data', f'performance_{algorithm}.csv')).iterrows():
             plot_data = plot_data.append([{
