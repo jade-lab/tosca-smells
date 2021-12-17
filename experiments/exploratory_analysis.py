@@ -50,11 +50,7 @@ class ExploratoryAnalysis:
             if metric in ('smelly', 'url', 'final'):
                 continue
 
-            # smelly = group_all.query('final == True')[metric]
-            # sound = group_all.query('final == False')[metric]
-
             # Combine data
-            # plot_data = list([smelly, sound])
             plot_data = list([group_smelly[metric], group_sound[metric]])
 
             xticklabels = ['Blob', 'Sound']
