@@ -20,8 +20,8 @@ class IQRExperiment(AbstractExperiment):
 
         for idx, row in dataset.iterrows():
 
+            is_smelly = False
             for metric, threshold in thresholds.items():
-                is_smelly = False
 
                 if row[metric] > threshold:
                     is_smelly = True
