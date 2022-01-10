@@ -5,8 +5,8 @@ from .experiment import AbstractExperiment
 
 class IQRExperiment(AbstractExperiment):
 
-    def __init__(self, n_repeats: int = 100):
-        super(self.__class__, self).__init__(n_repeats)
+    def __init__(self):
+        super(self.__class__, self).__init__()
 
     def detect_smells(self, dataset):
 

@@ -13,13 +13,11 @@ RANDOM_STATE = 42
 
 class ClusteringExperiment(AbstractExperiment):
 
-    def __init__(self, n_repeats: int = 100, method: str = 'kmeans'):
+    def __init__(self, method: str = 'kmeans'):
         """
 
         Parameters
         ----------
-        n_repeats : int
-            Number of times the experiment needs to be repeated for validation.
 
         method : string
             The clustering technique to use.
@@ -34,7 +32,7 @@ class ClusteringExperiment(AbstractExperiment):
             - 'dbscan' : DBSCAN
             - 'birch' : BIRCH
         """
-        super(self.__class__, self).__init__(n_repeats)
+        super(self.__class__, self).__init__()
         self.method = method
 
     def detect_smells(self, dataset):

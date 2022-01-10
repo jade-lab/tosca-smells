@@ -9,7 +9,7 @@ def main():
 
     for algorithm in ('agglomerative', 'birch', 'iqr', 'kmeans', 'mahalanobis', 'mean_shift'):
 
-        for _, row in pd.read_csv(os.path.join('data', f'performance_{algorithm}.csv')).iterrows():
+        for _, row in pd.read_csv(os.path.join('data', 'performance', f'{algorithm}.csv')).iterrows():
             plot_data = plot_data.append([{
                 'algorithm': algorithm,
                 'measure': 'mcc',

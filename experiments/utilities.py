@@ -11,7 +11,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 def reduce_multicollinearity(df: pd.DataFrame, threshold: int = 10, print_result: bool = True):
     vif_results = pd.DataFrame()
 
-    while True:
+    while df.shape[1] > 1:
         vif_data = pd.DataFrame()
         vif_data["feature"] = df.columns
         vif_data["VIF"] = [variance_inflation_factor(df.values, i) for i in range(len(df.columns))]

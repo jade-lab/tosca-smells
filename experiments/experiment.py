@@ -8,40 +8,38 @@ from .utilities import calculate_performance, normalize, reduce_multicollinearit
 
 class AbstractExperiment:
 
-    def __init__(self, n_repeats: int = 100):
+    def __init__(self):
+        self.performance_df = pd.DataFrame()
+        self.features = []
+        self.evaluation_sets = None
         random.seed(42)
 
-        # Store the values of ARI, MCC, Precision, and Recall across the experiment iterations
-        self.performance_df = pd.DataFrame()
-
+    @staticmethod
+    def load_dataset():
         # Load metrics dataset
-        metrics_df = pd.read_csv(os.path.join('data', 'metrics.csv')).fillna(0)
+        df = pd.read_csv(os.path.join('data', 'metrics.csv')).fillna(0)
 
         # Remove duplicates based on metrics value
-        metrics_df.drop_duplicates(subset=metrics_df.columns.difference(['url']), keep='first', inplace=True)
+        df.drop_duplicates(subset=df.columns.difference(['url']), keep='first', inplace=True)
 
-        # Node templates + Relationship templates = num_templates (as define in puppet (abstraction))
-        metrics_df['num_types_and_templates'] = metrics_df[['num_node_templates', 'num_relationship_templates',
-                                                            'num_node_types', 'num_relationship_types']].sum(axis=1)
-        metrics_df['complexity'] = metrics_df[['lcot', 'num_interfaces', 'num_properties']].sum(axis=1)
+        # TODO: move this in metrics extraction
+        df['num_types_and_templates'] = df[['num_node_templates', 'num_relationship_templates',
+                                            'num_node_types', 'num_relationship_types']].sum(axis=1)
 
-        metrics_df = metrics_df[['url', 'lines_code', 'num_types_and_templates', 'lcot']]
+        return df
 
-        # Create n_repeats evaluation datasets to run the algorithms on
-        self.evaluation_sets = []
-
-        if n_repeats == 1:
-            # Use the entire original dataset
-            self.evaluation_sets.append(metrics_df)
-        else:
-            for i in range(0, n_repeats):
-                self.evaluation_sets.append(metrics_df.sample(n=random.randint(290, metrics_df.shape[0]), random_state=42))
-
-    def run(self, multicollinearity_reduction: bool = True):
+    def run(self, features: list = None, n_repeats: int = 100, multicollinearity_reduction: bool = True):
         """
 
         Parameters
         ----------
+        features: list
+            the list of features to use
+
+        n_repeats: int
+            number of times to repeat the experiment on n_repeats perturbed versions of the original dataset. \
+            If n_repeats = 1 the original dataset is used
+
         multicollinearity_reduction : bool
             if to reduce multicollinearity among predictors (where VIF > 10)
 
@@ -50,6 +48,28 @@ class AbstractExperiment:
         None
 
         """
+        metrics_df = self.load_dataset()
+
+        if features:
+            self.features = features
+            metrics_df = metrics_df.loc[:, [*features, 'url']]
+
+        # Create n_repeats evaluation datasets to run the algorithms on
+        self.evaluation_sets = []
+
+        if n_repeats == 1:
+            # Use the original dataset
+            self.evaluation_sets.append(metrics_df)
+        else:
+            # Create n_repeats perturbed versions of the original dataset of at least 290 uniformly sampled observations
+            # without replacement (290 is a statistically relevant sample based on the original dataset's size)
+            for i in range(0, n_repeats):
+                self.evaluation_sets.append(
+                    metrics_df.sample(n=random.randint(290, metrics_df.shape[0]), random_state=42))
+
+        # Initialize performance dataframe
+        self.performance_df = pd.DataFrame()
+
         for i in progressbar.progressbar(range(len(self.evaluation_sets))):
 
             # Prepare data
@@ -86,3 +106,15 @@ class AbstractExperiment:
             The tuple (int, bool) of index and smelliness for that observation
         """
         yield NotImplementedError
+
+    @property
+    def median_mcc(self):
+        return self.performance_df.mcc.median() if 'mcc' in self.performance_df else -1
+
+    @property
+    def median_precision(self):
+        return self.performance_df.precision.median() if 'precision' in self.performance_df else 0
+
+    @property
+    def median_recall(self):
+        return self.performance_df.recall.median() if 'recall' in self.performance_df else -1

@@ -11,7 +11,8 @@ def main():
     metrics_df['num_types_and_templates'] = metrics_df[['num_node_templates', 'num_relationship_templates',
                                                         'num_node_types', 'num_relationship_types']].sum(axis=1)
     metrics_df = metrics_df[
-        ['url', 'lines_code', 'num_types_and_templates', 'lcot', 'num_interfaces', 'num_properties']]
+        ['url', 'lines_code', 'num_types_and_templates', 'lcot', 'num_interfaces', 'num_properties', 'num_imports',
+         'num_capabilities', 'num_inputs', 'num_suspicious_comments']]
 
     validation_df = pd.read_csv(os.path.join('data', 'validation.csv'))
     group_all = metrics_df.merge(validation_df[['url', 'final']], on='url')
