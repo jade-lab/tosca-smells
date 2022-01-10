@@ -28,7 +28,7 @@ class AbstractExperiment:
 
         return df
 
-    def run(self, features: list = None, n_repeats: int = 100, multicollinearity_reduction: bool = True):
+    def run(self, features: list = None, n_repeats: int = 100):
         """
 
         Parameters
@@ -39,9 +39,6 @@ class AbstractExperiment:
         n_repeats: int
             number of times to repeat the experiment on n_repeats perturbed versions of the original dataset. \
             If n_repeats = 1 the original dataset is used
-
-        multicollinearity_reduction : bool
-            if to reduce multicollinearity among predictors (where VIF > 10)
 
         Returns
         -------
@@ -76,8 +73,7 @@ class AbstractExperiment:
             X = self.evaluation_sets[i].drop(['url'], axis=1)
 
             # Remove correlated variables (i.e., features for which VIF > 10)
-            if multicollinearity_reduction:
-                reduce_multicollinearity(X, print_result=False)
+            reduce_multicollinearity(X, print_result=False)
 
             # Normalize dataset
             _, X = normalize(X)

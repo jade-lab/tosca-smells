@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import scipy.stats as stats
-from statistics import median
 
 from copy import deepcopy
 
@@ -10,7 +9,6 @@ from experiments.experiment import AbstractExperiment
 from experiments.clustering import ClusteringExperiment
 from experiments.iqr import IQRExperiment
 from experiments.mahalanobis import MahalanobisExperiment
-from experiments.threshold import StaticThresholdExperiment
 
 print('Enter:\n- 1 for the exploratory analysis.\n- 2 to reproduce the empirical experiment.\n- 3 to reproduce the '
       'statistical analysis of performance.\n- 4 to plot algorithms\' performance.\n\nChoice:', end=' ')
