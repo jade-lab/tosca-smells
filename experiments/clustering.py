@@ -1,12 +1,10 @@
 import numpy as np
 import pandas as pd
 import random
-import warnings
 
 from .experiment import AbstractExperiment
-from sklearn.cluster import AgglomerativeClustering, AffinityPropagation, Birch, DBSCAN, KMeans, MeanShift, SpectralClustering
+from sklearn.cluster import AgglomerativeClustering, Birch, KMeans, MeanShift
 from sklearn.metrics import silhouette_score
-from sklearn.neighbors import VALID_METRICS
 
 RANDOM_STATE = 42
 
@@ -24,12 +22,9 @@ class ClusteringExperiment(AbstractExperiment):
 
             Options
             -------
-            - 'affinity' : AffinityPropagation
             - 'agglomerative' : AgglomerativeClustering
             - 'kmeans' : KMeans
             - 'meanshift' : MeanShift
-            - 'spectral' : SpectralClustering
-            - 'dbscan' : DBSCAN
             - 'birch' : BIRCH
         """
         super(self.__class__, self).__init__()
@@ -39,18 +34,12 @@ class ClusteringExperiment(AbstractExperiment):
 
         if self.method == 'agglomerative':
             cluster_labels = agglomerative_clustering_random_search(dataset)
-        elif self.method == 'affinity':
-            cluster_labels = affinity_propagation_random_search(dataset)
         elif self.method == 'birch':
             cluster_labels = birch_random_search(dataset)
-        elif self.method == 'dbscan':
-            cluster_labels = dbscan_random_search(dataset)
         elif self.method == 'kmeans':
             cluster_labels = kmeans_random_search(dataset)
         elif self.method == 'mean-shift':
             cluster_labels = mean_shift_random_search(dataset)
-        elif self.method == 'spectral':
-            cluster_labels = spectral_clustering_random_search(dataset)
         else:
             raise ValueError()
 
@@ -83,24 +72,6 @@ class ClusteringExperiment(AbstractExperiment):
 
             for idx, _ in cluster_df.iterrows():
                 yield idx, is_smelly
-
-
-def affinity_propagation_random_search(dataset):
-    best_configuration = (None, {}, 0)  # (cluster_labels, parameters, silhouette_score)
-
-    for i in range(0, 10):
-        damping = 0.5 # random.randrange(5, 10) / 10
-        affinity = random.choice(['euclidean', 'precomputed'])
-
-        cluster_labels = AffinityPropagation(damping=damping,
-                                             affinity=affinity,
-                                             random_state=RANDOM_STATE).fit_predict(dataset)
-
-        score = silhouette_score(dataset, cluster_labels)
-        if score > best_configuration[2]:
-            best_configuration = (cluster_labels, dict(damping=damping, affinity=affinity), score)
-
-    return best_configuration[0]
 
 
 def agglomerative_clustering_random_search(dataset):
@@ -143,29 +114,6 @@ def birch_random_search(dataset):
                                   dict(n_clusters=n_clusters,
                                        branching_factor=branching_factor,
                                        threshold=threshold),
-                                  score)
-
-    return best_configuration[0]
-
-
-def dbscan_random_search(dataset):
-    best_configuration = (None, {}, 0)  # (cluster_labels, parameters, silhouette_score)
-
-    for i in range(0, 10):
-        algorithm = random.choice(['ball_tree', 'kd_tree', 'brute'])
-        metric = random.choice(VALID_METRICS[algorithm])
-        eps = random.randint(1, 10) / 10
-
-        cluster_labels = DBSCAN(algorithm=algorithm, eps=eps, metric=metric, n_jobs=-1).fit_predict(dataset)
-        if len(set(cluster_labels)) == 1:
-            continue
-
-        score = silhouette_score(dataset, cluster_labels)
-        if score > best_configuration[2]:
-            best_configuration = (cluster_labels,
-                                  dict(algorithm=algorithm,
-                                       eps=eps,
-                                       metric=metric),
                                   score)
 
     return best_configuration[0]
@@ -217,45 +165,6 @@ def mean_shift_random_search(dataset):
                                   dict(bin_seeding=bin_seeding,
                                        cluster_all=cluster_all,
                                        min_bin_freq=min_bin_freq),
-                                  score)
-
-    return best_configuration[0]
-
-
-def spectral_clustering_random_search(dataset):
-    best_configuration = (None, {}, 0)  # (cluster_labels, parameters, silhouette_score)
-
-    for i in range(0, 10):
-        n_clusters = random.randint(2, 20)
-        eigen_solver = random.choice(['arpack', 'lobpcg', 'amg'])
-        n_components = random.randint(1, n_clusters)
-        n_init = random.randint(1, 20)
-        affinity = random.choice(['nearest_neighbors', 'rbf', 'precomputed', 'precomputed_nearest_neighbors'])
-        n_neighbors = random.randint(2, 20)
-        assign_labels = random.choice(['kmeans', 'discretize'])
-
-        with warnings.catch_warnings():
-            warnings.simplefilter('ignore')
-            cluster_labels = SpectralClustering(n_clusters=n_clusters,
-                                                eigen_solver=eigen_solver,
-                                                n_components=n_components,
-                                                n_init=n_init,
-                                                affinity=affinity,
-                                                n_neighbors=n_neighbors,
-                                                assign_labels=assign_labels,
-                                                n_jobs=-1,
-                                                random_state=RANDOM_STATE).fit_predict(dataset)
-
-        score = silhouette_score(dataset, cluster_labels)
-        if score > best_configuration[2]:
-            best_configuration = (cluster_labels,
-                                  dict(n_clusters=n_clusters,
-                                       eigen_solver=eigen_solver,
-                                       n_components=n_components,
-                                       n_init=n_init,
-                                       affinity=affinity,
-                                       n_neighbors=n_neighbors,
-                                       assign_labels=assign_labels),
                                   score)
 
     return best_configuration[0]
