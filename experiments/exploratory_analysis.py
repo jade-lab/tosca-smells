@@ -59,7 +59,12 @@ def main():
         axs[i, j % ncols].set_xlabel(metric.replace('_', ' ').upper())
         axs[i, j % ncols].set_xticks([1, 2])
         axs[i, j % ncols].set_xticklabels(xticklabels)
-        axs[i, j % ncols].violinplot(plot_data, showmedians=True, quantiles=[(0.25, 0.75), (0.25, 0.75)])
+        parts = axs[i, j % ncols].violinplot(plot_data, showmedians=True, quantiles=[(0.25, 0.75), (0.25, 0.75)])
+
+        for pc in parts['bodies']:
+            pc.set_facecolor('#b3efff')
+            pc.set_alpha(1)
+
         j += 1
 
         if j % ncols == 0:
