@@ -31,8 +31,7 @@ elif value == '2':
         agglomerative=ClusteringExperiment(method='agglomerative'),
         birch=ClusteringExperiment(method='birch'),
         kmeans=ClusteringExperiment(method='kmeans'),
-        mean_shift=ClusteringExperiment(method='mean-shift'),
-        spectral=ClusteringExperiment(method='spectral')
+        mean_shift=ClusteringExperiment(method='mean-shift')
     )
 
     for algorithm, current_experiment in experiments.items():
@@ -99,22 +98,6 @@ elif value == '3':
 
 elif value == '4':
     plot_performance.main()
-
-#
-# if value == '30':
-#     experiment = ClusteringExperiment(n_repeats=N_REPEATS, method='affinity')
-#     experiment.run()
-#     print(experiment.performance_df.describe())
-#
-# if value == '50':
-#     experiment = ClusteringExperiment(n_repeats=N_REPEATS, method='dbscan')
-#     experiment.run()
-#     print(experiment.performance_df.describe())
-#
-# elif value == '9':
-#     experiment = StaticThresholdExperiment(n_repeats=N_REPEATS)
-#     experiment.run(multicollinearity_reduction=False)
-#     print(experiment.performance_df.describe())
 
 else:
     exit(0)
