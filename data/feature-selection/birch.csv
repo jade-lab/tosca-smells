@@ -1,0 +1,7 @@
+,features,median_mcc,median_precision,median_recall
+0,['num_interfaces'],0.5536,0.8,0.3889
+1,"['num_interfaces', 'lcot']",0.5851,0.627,0.7222
+2,"['num_interfaces', 'lcot', 'num_types_and_templates']",0.61605,0.57515,0.8
+3,"['num_interfaces', 'lcot', 'num_types_and_templates', 'num_imports']",0.46885,0.6667,0.4444
+4,"['num_interfaces', 'lcot', 'num_types_and_templates', 'num_imports', 'lines_code']",0.44989999999999997,1.0,0.2222
+5,"['num_interfaces', 'lcot', 'num_types_and_templates', 'num_imports', 'lines_code', 'num_properties']",0.43205,1.0,0.20415

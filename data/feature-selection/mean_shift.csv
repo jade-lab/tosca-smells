@@ -1,0 +1,7 @@
+,features,median_mcc,median_precision,median_recall
+0,['num_properties'],0.58375,0.5741499999999999,0.88565
+1,"['num_properties', 'num_types_and_templates']",0.58235,0.51925,0.8284
+2,"['num_properties', 'num_types_and_templates', 'lines_code']",0.6125,0.5152,1.0
+3,"['num_properties', 'num_types_and_templates', 'lines_code', 'lcot']",0.63915,0.6,0.76945
+4,"['num_properties', 'num_types_and_templates', 'lines_code', 'lcot', 'num_imports']",0.6163,0.47195,1.0
+5,"['num_properties', 'num_types_and_templates', 'lines_code', 'lcot', 'num_imports', 'num_interfaces']",0.59,0.5697,0.72875

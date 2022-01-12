@@ -1,6 +1,6 @@
 ,features,median_mcc,median_precision,median_recall
-0,"['lcot', 'lines_code']",0.4383,0.7143,0.2941
+0,"['lcot', 'lines_code']",0.4379,0.75,0.2941
 1,"['lcot', 'lines_code', 'num_interfaces']",0.54325,0.75,0.4583
 2,"['lcot', 'lines_code', 'num_interfaces', 'num_properties']",0.5951,0.75,0.5417
-3,"['lcot', 'lines_code', 'num_interfaces', 'num_properties', 'num_types_and_templates']",0.5951,0.75,0.5417
+3,"['lcot', 'lines_code', 'num_interfaces', 'num_properties', 'num_types_and_templates']",0.5998,0.7846,0.5385
 4,"['lcot', 'lines_code', 'num_interfaces', 'num_properties', 'num_types_and_templates', 'num_imports']",0.5615,0.6471,0.5417

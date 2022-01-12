@@ -1,7 +1,7 @@
 ,features,median_mcc,median_precision,median_recall
-0,['lcot'],0.5226,0.6364,0.5556
-1,"['lcot', 'num_imports']",0.2838,0.75,0.13185
-2,"['lcot', 'num_imports', 'num_interfaces']",0.2716,1.0,0.08574999999999999
-3,"['lcot', 'num_imports', 'num_interfaces', 'num_types_and_templates']",0.2358,1.0,0.0645
-4,"['lcot', 'num_imports', 'num_interfaces', 'num_types_and_templates', 'lines_code']",0.22870000000000001,1.0,0.0588
-5,"['lcot', 'num_imports', 'num_interfaces', 'num_types_and_templates', 'lines_code', 'num_properties']",0.21985,1.0,0.054099999999999995
+0,['num_interfaces'],0.5538,0.8,0.3889
+1,"['num_interfaces', 'num_imports']",0.36,1.0,0.1471
+2,"['num_interfaces', 'num_imports', 'num_types_and_templates']",0.2549,1.0,0.0755
+3,"['num_interfaces', 'num_imports', 'num_types_and_templates', 'lcot']",0.2358,1.0,0.0645
+4,"['num_interfaces', 'num_imports', 'num_types_and_templates', 'lcot', 'lines_code']",0.22870000000000001,1.0,0.0588
+5,"['num_interfaces', 'num_imports', 'num_types_and_templates', 'lcot', 'lines_code', 'num_properties']",0.21985,1.0,0.054099999999999995
