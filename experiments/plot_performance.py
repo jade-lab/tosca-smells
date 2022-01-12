@@ -4,6 +4,10 @@ import pandas as pd
 
 
 def main():
+
+    plt.rc('ytick', labelsize=24)
+    plt.rc('xtick', labelsize=24)
+
     # Load data
     plot_data = pd.DataFrame()
 
@@ -45,16 +49,16 @@ def main():
         fig, ax = plt.subplots()
         fig.suptitle(f'{measure.upper()} across techniques')
         ax.violinplot([plot_data[iqr_mask].value,
+                       plot_data[mean_shift_mask].value,
                        plot_data[mahalanobis_mask].value,
-                       plot_data[agglomerative_mask].value,
-                       plot_data[birch_mask].value,
                        plot_data[kmeans_mask].value,
-                       plot_data[mean_shift_mask].value],
+                       plot_data[birch_mask].value,
+                       plot_data[agglomerative_mask].value],
                       showmedians=True,
                       showextrema=True,
                       quantiles=[(0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75), (0.25, 0.75)])
 
         ax.set_xticks([1, 2, 3, 4, 5, 6])
-        ax.set_xticklabels(['IQR', 'Mahalanobis', 'Agglomerative', 'Birch', 'KMeans', 'MeanShift'])
-        plt.ylabel = measure.upper()
+        ax.set_xticklabels(['IQR', 'MeanShift', 'Mahalanobis', 'KMeans', 'Birch', 'Agglomerative'])
+
         plt.show()
