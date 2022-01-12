@@ -4,14 +4,15 @@ import scipy.stats as stats
 
 from copy import deepcopy
 
-from experiments import exploratory_analysis, plot_performance, statistical_analysis
+from experiments import exploratory_analysis, plot_performance, statistical_analysis, stepwise_forward_selection
 from experiments.experiment import AbstractExperiment
 from experiments.clustering import ClusteringExperiment
 from experiments.iqr import IQRExperiment
 from experiments.mahalanobis import MahalanobisExperiment
 
 print('Enter:\n- 1 for the exploratory analysis.\n- 2 to reproduce the empirical experiment.\n- 3 to reproduce the '
-      'statistical analysis of performance.\n- 4 to plot algorithms\' performance.\n\nChoice:', end=' ')
+      'statistical analysis of performance.\n- 4 to plot algorithms\' performance.\n- 5 to plot performance during '
+      'stepwise forward selection.\n\nChoice:', end=' ')
 value = input()
 
 N_REPEATS = 100
@@ -98,6 +99,9 @@ elif value == '3':
 
 elif value == '4':
     plot_performance.main()
+
+elif value == '5':
+    stepwise_forward_selection.main()
 
 else:
     exit(0)
