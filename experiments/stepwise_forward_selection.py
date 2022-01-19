@@ -29,7 +29,7 @@ def main():
         y_recall = data.median_recall.to_list()
 
         axis[i, j % 2].plot(x, y_mcc, label="mcc", linestyle='-', marker='.',  linewidth=2)
-        axis[i, j % 2].plot(x, y_precision, label="precision", linestyle='-', marker='.',  linewidth=2)
+        axis[i, j % 2].plot(x, y_precision, label="precision", linestyle='--', marker='.',  linewidth=2)
         axis[i, j % 2].plot(x, y_recall, label="recall", linestyle=':', marker='.',  linewidth=2)
         axis[i, j % 2].set_title(algorithm)
 
