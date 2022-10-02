@@ -1,12 +1,12 @@
 cliffs-delta~=1.0.0
 matplotlib~=3.4.2
-numpy~=1.20.3
+numpy~=1.23.3
 pandas~=1.2.0
 progressbar2~=3.55.0
 pydriller~=2.0
 requests~=2.25.1
 scikit-learn~=0.24.2
-scipy~=1.6.3
-statsmodels~=0.12.2
+scipy~=1.9.1
+statsmodels~=0.13.3
 tabulate~=0.8.9
 tosca-metrics~=0.0.11
