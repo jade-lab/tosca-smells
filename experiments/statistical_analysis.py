@@ -36,6 +36,8 @@ def main():
 
     # Perform statistical analysis
     n_tests = len(plot_data.algorithm.unique())
+    n_algorithms = len(plot_data.algorithm.unique()) - 1
+    n_comparisons = n_algorithms * (n_algorithms + 1) / 2
 
     content = '# Statistical Evaluation of Techniques'
 
@@ -64,13 +66,13 @@ def main():
                     'algorithm 1': algorithm1,
                     'algorithm 2': algorithm2,
                     'p-value': p_value,
-                    'p-value corrected': p_value * n_tests,
+                    'p-value corrected': p_value * n_comparisons,
                     'U': u_stat,
                     'cliff_delta': d,
                     'mean algorithm 1': round(plot_data[mask_algo1].value.mean(), 4),
                     'mean algorithm 2': round(plot_data[mask_algo2].value.mean(), 4),
                     'measure': measure,
-                    'significant': '**yes**' if p_value * n_tests < 0.01 else 'no'
+                    'significant': '**yes**' if p_value * n_comparisons < 0.01 else 'no'
                 }, ignore_index=True)
 
         content += f'\n## {measure.upper()}\n'
