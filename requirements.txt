@@ -4,6 +4,7 @@ numpy~=1.23.3
 pandas~=1.2.0
 progressbar2~=3.55.0
 pydriller~=2.0
+PyQt5~=5.15.7
 requests~=2.25.1
 scikit-learn~=0.24.2
 scipy~=1.9.1
